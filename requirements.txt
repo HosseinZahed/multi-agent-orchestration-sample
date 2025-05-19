@@ -1,0 +1,4 @@
+dotenv
+chainlit
+semantic-kernel[azure]
+openai
