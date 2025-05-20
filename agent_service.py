@@ -12,7 +12,7 @@ from azure.identity.aio import DefaultAzureCredential
 
 
 from utils import load_prompt
-from plugin_service import WeatherPlugin
+from plugin_service import DateTimePlugin
 
 
 class AgentsService:
@@ -51,7 +51,7 @@ class AgentsService:
         agent = ChatCompletionAgent(
             kernel=kernel,
             name=agent_name,
-            plugins=[WeatherPlugin()],
+            plugins=[DateTimePlugin()],
             instructions=instructions or load_prompt(agent_name=agent_name),
         )
         return agent

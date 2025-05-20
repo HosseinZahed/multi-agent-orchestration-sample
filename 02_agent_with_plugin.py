@@ -48,8 +48,8 @@ async def on_message(user_message: cl.Message):
 async def set_starts() -> List[cl.Starter]:
     return [
         cl.Starter(
-            label="Copenhagen Weather",
-            message="What's the weather like in Copenhagen today?",
+            label="Today's date and time",
+            message="What's the date and time?",
         ),
         cl.Starter(
             label="Health Insurance Benefits",
