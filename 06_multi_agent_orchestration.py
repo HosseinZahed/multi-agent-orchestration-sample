@@ -38,42 +38,39 @@ kernel = Kernel()
 # The filter is used for demonstration purposes to show the function invocation.
 kernel.add_filter("function_invocation", function_invocation_filter)
 
-billing_agent = ChatCompletionAgent(
+device_support_agent = ChatCompletionAgent(
     service=AzureChatCompletion(deployment_name=deployment_name),
-    name="BillingAgent",
+    name="device_support_agent",
     instructions=(
-        "You specialize in handling customer questions related to billing issues. "
-        "This includes clarifying invoice charges, payment methods, billing cycles, "
-        "explaining fees, addressing discrepancies in billed amounts, updating payment details, "
-        "assisting with subscription changes, and resolving payment failures. "
-        "Your goal is to clearly communicate and resolve issues specifically about payments and charges."
+        "You are an expert in hearing aid device support. "
+        "Assist users with troubleshooting device issues, connectivity problems, battery questions, "
+        "cleaning and maintenance, and general usage tips for hearing aids. "
+        "Your goal is to help users resolve technical or operational issues with their hearing aids."
     ),
 )
 
-refund_agent = ChatCompletionAgent(
+warranty_repair_agent = ChatCompletionAgent(
     service=AzureChatCompletion(deployment_name=deployment_name),
-    name="RefundAgent",
+    name="warranty_repair_agent",
     instructions=(
-        "You specialize in addressing customer inquiries regarding refunds. "
-        "This includes evaluating eligibility for refunds, explaining refund policies, "
-        "processing refund requests, providing status updates on refunds, handling complaints related to refunds, "
-        "and guiding customers through the refund claim process. "
-        "Your goal is to assist users clearly and empathetically to successfully resolve their refund-related concerns."
+        "You specialize in warranty and repair inquiries for hearing aids. "
+        "Assist users with questions about warranty coverage, repair processes, service timelines, "
+        "replacement options, and how to initiate a repair or warranty claim. "
+        "Your goal is to guide users through warranty and repair procedures for their hearing aids."
     ),
 )
 
 triage_agent = ChatCompletionAgent(
     service=AzureChatCompletion(deployment_name=deployment_name),
     kernel=kernel,
-    name="TriageAgent",
+    name="triage_agent",
     instructions=(
         "Your role is to evaluate the user's request and forward it to the appropriate agent based on the nature of "
-        "the query. Forward requests about charges, billing cycles, payment methods, fees, or payment issues to the "
-        "BillingAgent. Forward requests concerning refunds, refund eligibility, refund policies, or the status of "
-        "refunds to the RefundAgent. Your goal is accurate identification of the appropriate specialist to ensure the "
-        "user receives targeted assistance."
+        "the query. Forward requests about device troubleshooting, connectivity, batteries, or usage to the "
+        "DeviceSupportAgent. Forward requests about warranty, repairs, service, or replacement to the WarrantyRepairAgent. "
+        "Your goal is accurate identification of the appropriate specialist to ensure the user receives targeted assistance."
     ),
-    plugins=[billing_agent, refund_agent],
+    plugins=[device_support_agent, warranty_repair_agent],
 )
 
 
@@ -107,10 +104,15 @@ async def on_message(user_message: cl.Message):
 async def set_starts() -> List[cl.Starter]:
     return [
         cl.Starter(
-            label="Sample Request",
-            message="""
-            I was charged twice for my subscription last month, 
-            can I get one of those payments refunded?
-            """
+            label="Device Issue",
+            message="My hearing aid keeps disconnecting from my phone. How can I fix this?"
+        ),
+        cl.Starter(
+            label="Warranty Question",
+            message="Is my hearing aid still under warranty, and how do I get it repaired?"
+        ),
+        cl.Starter(
+            label="Cleaning Advice",
+            message="What is the best way to clean my hearing aid to keep it working well?"
         )
     ]
