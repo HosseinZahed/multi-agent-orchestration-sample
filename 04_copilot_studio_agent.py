@@ -15,14 +15,14 @@ logging.getLogger("copilot_studio_agent").setLevel(logging.INFO)
 logger = logging.getLogger(__name__)
 
 agent_service = AgentsService()
-client, agent = agent_service.create_copilot_studio_agent(
+directline_client, agent = agent_service.create_copilot_studio_agent(
     agent_name="copilot-studio-agent"
 )
 
 
 @cl.on_chat_start
 async def on_chat_start():    
-    cl.user_session.set("thread", CopilotAgentThread(directline_client=client))
+    cl.user_session.set("thread", CopilotAgentThread(directline_client=directline_client))
     cl.user_session.set("chat_history", ChatHistory())
 
 

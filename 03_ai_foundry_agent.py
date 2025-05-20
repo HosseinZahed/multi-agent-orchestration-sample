@@ -18,35 +18,27 @@ agent_service = AgentsService()
 async def on_chat_start():
     cl.user_session.set("chat_history", ChatHistory())
     cl.user_session.set("thread", None)
-
+    agent = await agent_service.get_ai_foundry_agent(
+        agent_id="asst_XZCAqENim0oqybvlztbnRz5R"
+    )
+    cl.user_session.set("agent", agent)
 
 @cl.on_message
 async def on_message(user_message: cl.Message):
     chat_history: ChatHistory = cl.user_session.get("chat_history")
     thread: AzureAIAgentThread = cl.user_session.get("thread")
+    agent: AzureAIAgent = cl.user_session.get("agent")
 
-    chat_history.add_user_message(user_message.content)
-    answer = cl.Message(content="")
+    chat_history.add_user_message(user_message.content)       
 
-    async with agent_service.get_ai_foundry_client() as client:
+    response = await agent.get_response(
+        messages=chat_history,
+        thread=thread
+    )
 
-        agent_definition = await client.agents.get_agent(
-            agent_id="asst_XZCAqENim0oqybvlztbnRz5R"
-        )
-
-        agent = AzureAIAgent(
-            client=client,
-            definition=agent_definition,
-        )
-
-        response = await agent.get_response(
-            messages=chat_history,
-            thread=thread
-        )
-
-        cl.user_session.set("thread", thread)       
-        chat_history.add_assistant_message(response.message.content)
-        await cl.Message(content=response.message.content).send()
+    cl.user_session.set("thread", thread)       
+    chat_history.add_assistant_message(response.message.content)
+    await cl.Message(content=response.message.content).send()
 
 
 @cl.set_starters  # type: ignore

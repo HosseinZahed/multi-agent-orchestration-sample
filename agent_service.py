@@ -60,7 +60,20 @@ class AgentsService:
         )
         return agent
 
-    def create_copilot_studio_agent(self, agent_name: str):
+    async def get_ai_foundry_agent(self, agent_id: str):
+        client = await self.get_ai_foundry_client().__aenter__()
+
+        agent_definition = await client.agents.get_agent(
+            agent_id=agent_id
+        )
+
+        agent = AzureAIAgent(
+            client=client,
+            definition=agent_definition,
+        )
+        return agent
+
+    def get_copilot_studio_agent(self, agent_name: str):
         """Create a Copilot Studio agent."""
         client = DirectLineClient(
             copilot_agent_secret=os.getenv("BOT_SECRET"),
