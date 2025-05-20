@@ -4,13 +4,10 @@ from semantic_kernel import Kernel
 from semantic_kernel.agents import ChatCompletionAgent, AzureAIAgent
 from semantic_kernel.connectors.ai.open_ai import AzureChatCompletion
 from semantic_kernel.connectors.ai import FunctionChoiceBehavior
-from semantic_kernel.connectors.ai.open_ai import (
-    OpenAIChatCompletion,
-    OpenAIChatPromptExecutionSettings,
-)
+from semantic_kernel.connectors.ai.open_ai import OpenAIChatPromptExecutionSettings
 from azure.identity.aio import DefaultAzureCredential
-
-
+from copilot_studio_addons.copilot_studio_agent import CopilotAgent
+from copilot_studio_addons.directline_client import DirectLineClient
 from utils import load_prompt
 from plugin_service import DateTimePlugin
 
@@ -38,6 +35,13 @@ class AgentsService:
             kernel=kernel,
             name=agent_name,
             instructions=instructions or load_prompt(agent_name=agent_name),
+            arguments={
+                "temperature": 0.7,
+                "max_tokens": 1000,
+                "top_p": 1.0,
+                "frequency_penalty": 0.0,
+                "presence_penalty": 0.0,
+            },
         )
         return agent
 
@@ -55,12 +59,27 @@ class AgentsService:
             instructions=instructions or load_prompt(agent_name=agent_name),
         )
         return agent
-    
+
+    def create_copilot_studio_agent(self, agent_name: str):
+        """Create a Copilot Studio agent."""
+        client = DirectLineClient(
+            copilot_agent_secret=os.getenv("BOT_SECRET"),
+            directline_endpoint=os.getenv("DIRECTLINE_ENDPOINT"),
+        )
+
+        agent = CopilotAgent(
+            id=agent_name,
+            name=agent_name,
+            description="Copilot Studio Agent",
+            directline_client=client,
+        )
+        return client, agent
+
     @asynccontextmanager
     async def get_ai_foundry_client(self):
         async with DefaultAzureCredential() as creds:
             async with AzureAIAgent.create_client(credential=creds) as client:
-                yield client   
+                yield client
 
     @staticmethod
     def request_settings() -> OpenAIChatPromptExecutionSettings:
