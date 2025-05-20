@@ -3,11 +3,13 @@ import chainlit as cl
 from semantic_kernel.agents import AzureAIAgent, AzureAIAgentThread
 from semantic_kernel.contents import ChatHistory
 from agent_service import AgentsService
-
 import logging
 
+
+logging.basicConfig(level=logging.INFO)
 logging.getLogger("openai").setLevel(logging.INFO)
 logging.getLogger("semantic_kernel").setLevel(logging.INFO)
+logger = logging.getLogger(__name__)
 
 
 @cl.on_chat_start
@@ -42,7 +44,7 @@ async def on_message(user_message: cl.Message):
         )
         print(response)
         answer.content = str(response)
-        
+
         # async for token in agent.invoke_stream(
         #     message=user_message.content,
         #     thread=thread
@@ -60,11 +62,15 @@ async def on_message(user_message: cl.Message):
 async def set_starts() -> List[cl.Starter]:
     return [
         cl.Starter(
-            label="Weather Bot",
+            label="Copenhagen Weather",
             message="What's the weather like in Copenhagen today?",
         ),
         cl.Starter(
             label="Health Insurance Benefits",
             message="What kind of health insurance benefits do I get from Contoso?",
+        ),
+        cl.Starter(
+            label="Euroision 2025 Winner",
+            message="Who won the Eurovision Song Contest 2025?",
         )
     ]

@@ -48,11 +48,15 @@ async def on_message(user_message: cl.Message):
 async def set_starts() -> List[cl.Starter]:
     return [
         cl.Starter(
-            label="Weather Bot",
+            label="Copenhagen Weather",
             message="What's the weather like in Copenhagen today?",
         ),
         cl.Starter(
             label="Health Insurance Benefits",
-            message="What kind of health insurance benefits do I get?",
+            message="What kind of health insurance benefits do I get from Contoso?",
+        ),
+        cl.Starter(
+            label="Euroision 2025 Winner",
+            message="Who won the Eurovision Song Contest 2025?",
         )
     ]
