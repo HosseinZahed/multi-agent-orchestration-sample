@@ -1,6 +1,7 @@
 import os
 from contextlib import asynccontextmanager
 from semantic_kernel import Kernel
+from semantic_kernel.kernel import KernelArguments
 from semantic_kernel.agents import ChatCompletionAgent, AzureAIAgent
 from semantic_kernel.connectors.ai.open_ai import AzureChatCompletion
 from semantic_kernel.connectors.ai import FunctionChoiceBehavior
@@ -27,7 +28,8 @@ class AgentsService:
     def create_simple_agent(self,
                             agent_name: str,
                             model_name: str,
-                            instructions: str = None):
+                            instructions: str = None,
+                            plugins: list = None):
         """Create a simple chat completion agent."""
         kernel = self.base_kernel.clone()
         kernel.add_service(AzureChatCompletion(deployment_name=model_name))
@@ -35,13 +37,10 @@ class AgentsService:
             kernel=kernel,
             name=agent_name,
             instructions=instructions or load_prompt(agent_name=agent_name),
-            arguments={
-                "temperature": 0.7,
-                "max_tokens": 1000,
-                "top_p": 1.0,
-                "frequency_penalty": 0.0,
-                "presence_penalty": 0.0,
-            },
+            plugins=plugins or [],
+            arguments= KernelArguments(
+                request_settings=self.request_settings()
+            )
         )
         return agent
 
@@ -100,5 +99,10 @@ class AgentsService:
         return OpenAIChatPromptExecutionSettings(
             function_choice_behavior=FunctionChoiceBehavior.Auto(
                 filters={"excluded_plugins": ["ChatBot"]}
-            )
+            ),
+            max_tokens=1000,
+            temperature=0.7,
+            top_p=1.0,
+            frequency_penalty=0.0,
+            presence_penalty=0.0,
         )
