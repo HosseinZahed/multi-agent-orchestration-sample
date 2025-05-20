@@ -1,4 +1,6 @@
 dotenv
 chainlit
 semantic-kernel[azure]
+azure-ai-projects==1.0.0b10
 openai
+asyncio

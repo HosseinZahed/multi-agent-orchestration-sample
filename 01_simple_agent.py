@@ -19,7 +19,8 @@ async def on_chat_start():
 @cl.on_message
 async def on_message(user_message: cl.Message):
     agent_service: AgentsService = cl.user_session.get("agent_service")
-    agent: ChatCompletionAgent = agent_service.create_agent(
+    
+    agent: ChatCompletionAgent = agent_service.create_simple_agent(
         agent_name="simple-agent",
         model_name="gpt-4.1-mini",
         instructions="You are a helpful assistant."
@@ -47,15 +48,11 @@ async def on_message(user_message: cl.Message):
 async def set_starts() -> List[cl.Starter]:
     return [
         cl.Starter(
-            label="AI Assistant",
-            message="Design an AI assistant with frontend, backend, and database integration.",
-        ),
-        cl.Starter(
-            label="Data Analysis Bot",
-            message="Create a bot to analyze and visualize data trends.",
-        ),
-        cl.Starter(
             label="Weather Bot",
-            message="How is the weather today?",
+            message="What's the weather like in Copenhagen today?",
         ),
+        cl.Starter(
+            label="Health Insurance Benefits",
+            message="What kind of health insurance benefits do I get?",
+        )
     ]
