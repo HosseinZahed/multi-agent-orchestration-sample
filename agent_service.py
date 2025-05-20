@@ -85,7 +85,7 @@ class AgentsService:
             description="Copilot Studio Agent",
             directline_client=client,
         )
-        return client, agent
+        return client, agent    
 
     @asynccontextmanager
     async def get_ai_foundry_client(self):
