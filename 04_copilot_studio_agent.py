@@ -48,7 +48,7 @@ async def set_starts() -> List[cl.Starter]:
             message="What's the weather like in Copenhagen today?",
         ),
         cl.Starter(
-            label="Euroision 2025 Winner",
+            label="Eurovision 2025 Winner",
             message="Who won the Eurovision Song Contest 2025?",
         )
     ]
