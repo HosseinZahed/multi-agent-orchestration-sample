@@ -55,7 +55,7 @@ class CopilotStudioAgentChannel(AgentChannel, ChatHistory):
             An async iterable of ChatMessageContent with a boolean indicating if the
             message should be visible external to the agent.
         """
-        from .copilot_agent import CopilotAgent
+        from .copilot_studio_agent import CopilotAgent
 
         if not isinstance(agent, CopilotAgent):
             raise ValueError("Agent must be an instance of CopilotAgent.")

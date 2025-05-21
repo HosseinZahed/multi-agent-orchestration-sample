@@ -43,6 +43,7 @@ Replace `01_default_agent.py` with any of the following to try different scenari
 - `05_agent_with_mcp.py` – Agent with GitHub MCP plugin integration 🛠️
 - `06_multi_agent_orchestration_implicit.py` – Implicit multi-agent orchestration 🔄
 - `07_multi_agent_orchestration_explicit.py` – Explicit multi-agent orchestration with function call tracing 🕹️
+- `08_agent_with_rag.py` – Agent with Azure AI Search (RAG) integration 📄
 
 Open the provided local URL in your browser to chat with your agents!
 
@@ -57,6 +58,11 @@ AZURE_AI_AGENT_MODEL_DEPLOYMENT_NAME=<your_model_deployment_name>
 #Copilot Studio Agent
 BOT_SECRET="copy from Copilot Studio Agent, under Settings > Security > Web Channel"
 DIRECTLINE_ENDPOINT="https://europe.directline.botframework.com/v3/directline"
+
+#Azure Search (for 08_agent_with_rag.py)
+AI_SEARCH_ENDPOINT="https://<your-endpoint>.search.windows.net"
+AI_SEARCH_KEY="<your_search_key>"
+AI_SEARCH_INDEX="<your_index_name>"
 ```
 
 ## Customizing Agent Prompts 📝
