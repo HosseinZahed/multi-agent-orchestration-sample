@@ -36,8 +36,7 @@ agent: ChatCompletionAgent = agent_service.create_default_agent(
 
 def retrieve_documents(query: str, top_k: int = 5) -> List[dict]:
     """Retrieve top_k relevant documents from Azure AI Search, including chunk and title."""
-    results = search_client.search(query, top=top_k)
-    logger.info(f"Retrieved {top_k} documents for query: {query}")
+    results = search_client.search(query, top=top_k)    
     docs = []
     for result in results:
         doc = {
