@@ -64,6 +64,9 @@ async def on_message(user_message: cl.Message):
     chat_history.add_user_message(user_message.content)
     answer = cl.Message(content="")
 
+    # Inform user that the agent is calling Azure AI Search
+    await cl.Message(content="🔎 Agent is calling Azure AI Search to retrieve relevant documents...").send()
+
     # Retrieve relevant documents from AI Search
     retrieved_docs = retrieve_documents(user_message.content)
     context = "\n\n".join(retrieved_docs)
