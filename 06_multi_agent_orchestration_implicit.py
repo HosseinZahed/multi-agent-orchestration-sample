@@ -114,5 +114,9 @@ async def set_starts() -> List[cl.Starter]:
         cl.Starter(
             label="Cleaning Advice",
             message="What is the best way to clean my hearing aid to keep it working well?"
+        ),
+        cl.Starter(
+            label="Device & Warranty",
+            message="My hearing aid is not working and I think it might be out of warranty. What should I do?"
         )
     ]
