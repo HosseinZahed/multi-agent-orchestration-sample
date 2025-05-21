@@ -13,7 +13,7 @@ logging.getLogger("semantic_kernel").setLevel(logging.INFO)
 logger = logging.getLogger(__name__)
 
 agent_service = AgentsService()
-agent: ChatCompletionAgent = agent_service.create_simple_agent(
+agent: ChatCompletionAgent = agent_service.create_default_agent(
     agent_name="simple-agent",
     model_name="gpt-4.1-mini",
     instructions="You are a helpful assistant."
@@ -22,6 +22,7 @@ agent: ChatCompletionAgent = agent_service.create_simple_agent(
 
 @cl.on_chat_start
 async def on_chat_start():
+    print("A new chat session has started!")
     cl.user_session.set("chat_history", ChatHistory())
     cl.user_session.set("thread", None)
 

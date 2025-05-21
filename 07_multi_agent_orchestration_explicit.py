@@ -2,10 +2,12 @@ from typing import List
 import dotenv
 import chainlit as cl
 from semantic_kernel import Kernel
+from semantic_kernel.kernel import KernelArguments
 from semantic_kernel.agents import ChatCompletionAgent, ChatHistoryAgentThread
 from semantic_kernel.connectors.ai.open_ai import AzureChatCompletion
 from semantic_kernel.filters import FunctionInvocationContext
 from semantic_kernel.contents import ChatHistory
+from agent_service import AgentsService
 import logging
 
 dotenv.load_dotenv(override=True)
@@ -31,6 +33,8 @@ async def function_invocation_filter(context: FunctionInvocationContext, next):
 
 # Deployment name
 deployment_name = "gpt-4.1-mini"
+
+agent_service = AgentsService()
 
 # Create and configure the kernel.
 kernel = Kernel()
@@ -71,6 +75,9 @@ triage_agent = ChatCompletionAgent(
         "Your goal is accurate identification of the appropriate specialist to ensure the user receives targeted assistance."
     ),
     plugins=[device_support_agent, warranty_repair_agent],
+    arguments=KernelArguments(
+        request_settings=agent_service.request_settings()
+    )
 )
 
 
@@ -104,7 +111,8 @@ async def on_message(user_message: cl.Message):
         ).send()
 
     # Add the Chainlit filter for this request
-    kernel.add_filter("function_invocation", chainlit_function_invocation_filter)
+    kernel.add_filter("function_invocation",
+                      chainlit_function_invocation_filter)
 
     async for token in triage_agent.invoke_stream(
             messages=chat_history,
@@ -118,7 +126,8 @@ async def on_message(user_message: cl.Message):
     await answer.send()
 
     # Remove the Chainlit filter and restore the original
-    kernel.remove_filter("function_invocation", chainlit_function_invocation_filter)
+    kernel.remove_filter("function_invocation",
+                         chainlit_function_invocation_filter)
     kernel.add_filter("function_invocation", function_invocation_filter)
 
 

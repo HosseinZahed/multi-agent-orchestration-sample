@@ -2,10 +2,12 @@ from typing import List
 import dotenv
 import chainlit as cl
 from semantic_kernel import Kernel
+from semantic_kernel.kernel import KernelArguments
 from semantic_kernel.agents import ChatCompletionAgent, ChatHistoryAgentThread
 from semantic_kernel.connectors.ai.open_ai import AzureChatCompletion
 from semantic_kernel.filters import FunctionInvocationContext
 from semantic_kernel.contents import ChatHistory
+from agent_service import AgentsService
 import logging
 
 dotenv.load_dotenv(override=True)
@@ -15,9 +17,9 @@ logging.getLogger("semantic_kernel").setLevel(logging.INFO)
 logging.getLogger("copilot_studio_agent").setLevel(logging.INFO)
 logger = logging.getLogger(__name__)
 
+agent_service = AgentsService()
+
 # Define the auto function invocation filter that will be used by the kernel
-
-
 async def function_invocation_filter(context: FunctionInvocationContext, next):
     """A filter that will be called for each function call in the response."""
     if "messages" not in context.arguments:
@@ -71,6 +73,9 @@ triage_agent = ChatCompletionAgent(
         "Your goal is accurate identification of the appropriate specialist to ensure the user receives targeted assistance."
     ),
     plugins=[device_support_agent, warranty_repair_agent],
+    arguments=KernelArguments(
+        request_settings=agent_service.request_settings()
+    )
 )
 
 

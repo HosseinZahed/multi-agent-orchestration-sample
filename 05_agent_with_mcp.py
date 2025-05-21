@@ -36,7 +36,7 @@ async def on_message(user_message: cl.Message):
         command="npx",
         args=["-y", "@modelcontextprotocol/server-github"],
     ) as github_plugin:
-        agent: ChatCompletionAgent = agent_service.create_simple_agent(
+        agent: ChatCompletionAgent = agent_service.create_default_agent(
             agent_name="github-agent",
             model_name="gpt-4.1-mini",
             instructions="Answer questions about any github project.",

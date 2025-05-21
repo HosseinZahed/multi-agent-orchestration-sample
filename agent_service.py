@@ -25,7 +25,7 @@ class AgentsService:
                 "Missing Azure OpenAI API endpoint, key or deployment.")
         self.base_kernel = Kernel()
 
-    def create_simple_agent(self,
+    def create_default_agent(self,
                             agent_name: str,
                             model_name: str,
                             instructions: str = None,
