@@ -6,7 +6,7 @@ Welcome! This project demonstrates how to orchestrate multiple AI agents using P
 
 ### 1. Clone the Repository
 ```bash
-git clone <your-repo-url>
+git clone https://github.com/HosseinZahed/multi-agent-orchestration-sample
 cd multi-agent-orchestration-sample
 ```
 
@@ -21,23 +21,28 @@ pip install -r requirements.txt
   cp .env.sample .env
   ```
 - Fill in your Azure OpenAI, Copilot Studio, and other credentials in `.env`:
-  - `AZURE_OPENAI_ENDPOINT`, `AZURE_OPENAI_API_KEY`, etc.
+  - `AZURE_OPENAI_ENDPOINT`
+  - `AZURE_OPENAI_API_KEY`
+  - `AZURE_AI_AGENT_PROJECT_CONNECTION_STRING`
+  - `AZURE_AI_AGENT_MODEL_DEPLOYMENT_NAME`
   - For Copilot Studio, get `BOT_SECRET` from Copilot Studio Agent (Settings > Security > Web Channel).
+  - `DIRECTLINE_ENDPOINT` for DirectLine API endpoint.
 
 ### 4. Run an Example 🏃‍♂️
 Pick one of the example scripts and run it with Chainlit:
 
 ```bash
-chainlit run 01_simple_agent.py
+chainlit run 01_default_agent.py -w
 ```
 
-Replace `01_simple_agent.py` with any of the following to try different scenarios:
-- `01_simple_agent.py` – Basic agent chat 🤖
-- `02_agent_with_plugin.py` – Agent with plugin support 🧩
+Replace `01_default_agent.py` with any of the following to try different scenarios:
+- `01_default_agent.py` – Basic agent chat 🤖
+- `02_agent_with_plugin.py` – Agent with date/time plugin 🧩
 - `03_ai_foundry_agent.py` – Azure AI Foundry agent integration ☁️
 - `04_copilot_studio_agent.py` – Copilot Studio agent integration 🦾
+- `05_agent_with_mcp.py` – Agent with GitHub MCP plugin integration 🛠️
 - `06_multi_agent_orchestration_implicit.py` – Implicit multi-agent orchestration 🔄
-- `07_multi_agent_orchestration_explicit.py` – Explicit multi-agent orchestration 🕹️
+- `07_multi_agent_orchestration_explicit.py` – Explicit multi-agent orchestration with function call tracing 🕹️
 
 Open the provided local URL in your browser to chat with your agents!
 
@@ -53,6 +58,13 @@ AZURE_AI_AGENT_MODEL_DEPLOYMENT_NAME=<your_model_deployment_name>
 BOT_SECRET="copy from Copilot Studio Agent, under Settings > Security > Web Channel"
 DIRECTLINE_ENDPOINT="https://europe.directline.botframework.com/v3/directline"
 ```
+
+## Customizing Agent Prompts 📝
+- Prompts for agents can be customized by editing or adding `.prompty` files in the `prompts/` directory. Each agent can have its own prompt file named after the agent (e.g., `default-agent.prompty`).
+
+## Utility Modules ⚙️
+- `plugin_service.py`: Contains example plugins (e.g., `DateTimePlugin`) for agent tool augmentation.
+- `utils.py`: Helper functions for loading prompts and other utilities.
 
 ## Useful Links 🔗
 - [Chainlit Documentation](https://docs.chainlit.io) 📚
