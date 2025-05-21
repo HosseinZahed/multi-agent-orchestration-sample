@@ -22,7 +22,6 @@ agent: ChatCompletionAgent = agent_service.create_default_agent(
 
 @cl.on_chat_start
 async def on_chat_start():
-    print("A new chat session has started!")
     cl.user_session.set("chat_history", ChatHistory())
     cl.user_session.set("thread", None)
 
