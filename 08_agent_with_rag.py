@@ -34,19 +34,17 @@ agent: ChatCompletionAgent = agent_service.create_default_agent(
 )
 
 
-def retrieve_documents(query: str, top_k: int = 5) -> List[str]:
-    """Retrieve top_k relevant documents from Azure AI Search."""
+def retrieve_documents(query: str, top_k: int = 5) -> List[dict]:
+    """Retrieve top_k relevant documents from Azure AI Search, including chunk and title."""
     results = search_client.search(query, top=top_k)
     logger.info(f"Retrieved {top_k} documents for query: {query}")
     docs = []
     for result in results:
-        # Use 'chunk' field for content
-        if "chunk" in result:
-            docs.append(result["chunk"])
-        else:
-            logger.warning(
-                f"Result missing 'chunk' field. Available keys: {list(result.keys())}")
-            docs.append(str(result))
+        doc = {
+            "title": result.get("title", "(No Title)"),
+            "chunk": result.get("chunk", str(result))
+        }
+        docs.append(doc)
     return docs
 
 
@@ -69,7 +67,9 @@ async def on_message(user_message: cl.Message):
 
     # Retrieve relevant documents from AI Search
     retrieved_docs = retrieve_documents(user_message.content)
-    context = "\n\n".join(retrieved_docs)
+    context = "\n\n".join([
+        f"Title: {doc['title']}\nContent: {doc['chunk']}" for doc in retrieved_docs
+    ])
 
     # Add context to the chat history for the agent
     chat_history.add_user_message(
@@ -82,6 +82,12 @@ async def on_message(user_message: cl.Message):
     ):
         if token.content:
             await answer.stream_token(token.content.content)
+
+    # Add citations (unique titles) at the end of the response
+    if retrieved_docs:
+        unique_titles = list(dict.fromkeys(doc['title'] for doc in retrieved_docs))
+        citations = "\n\nCitations:\n" + "\n".join(f"📄 {title}" for title in unique_titles)
+        answer.content += citations
 
     chat_history.add_assistant_message(answer.content)
     cl.user_session.set("thread", thread)
