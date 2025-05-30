@@ -26,10 +26,10 @@ class AgentsService:
         self.base_kernel = Kernel()
 
     def create_default_agent(self,
-                            agent_name: str,
-                            model_name: str,
-                            instructions: str = None,
-                            plugins: list = None):
+                             agent_name: str,
+                             model_name: str,
+                             instructions: str = None,
+                             plugins: list = None):
         """Create a simple chat completion agent."""
         kernel = self.base_kernel.clone()
         kernel.add_service(AzureChatCompletion(deployment_name=model_name))
@@ -38,7 +38,7 @@ class AgentsService:
             name=agent_name,
             instructions=instructions or load_prompt(agent_name=agent_name),
             plugins=plugins or [],
-            arguments= KernelArguments(
+            arguments=KernelArguments(
                 request_settings=self.request_settings()
             )
         )
@@ -85,7 +85,28 @@ class AgentsService:
             description="Copilot Studio Agent",
             directline_client=client,
         )
-        return client, agent    
+        return client, agent
+
+    def create_model_router_agent(self,
+                                  agent_name: str,
+                                  model_name: str,
+                                  instructions: str = None,
+                                  plugins: list = None):
+        """Create a model router agent."""
+        kernel = self.base_kernel.clone()
+        kernel.add_service(AzureChatCompletion(
+            deployment_name=model_name,
+            api_version="2024-12-01-preview"))
+        agent = ChatCompletionAgent(
+            kernel=kernel,
+            name=agent_name,
+            instructions=instructions or load_prompt(agent_name=agent_name),
+            plugins=plugins or [],
+            arguments=KernelArguments(
+                request_settings=self.request_settings()
+            )
+        )
+        return agent
 
     @asynccontextmanager
     async def get_ai_foundry_client(self):
