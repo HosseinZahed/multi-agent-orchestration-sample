@@ -88,8 +88,7 @@ class AgentsService:
         return client, agent
 
     def create_model_router_agent(self,
-                                  agent_name: str,
-                                  model_name: str,
+                                  agent_name: str,                                  
                                   instructions: str = None,
                                   plugins: list = None):
         """Create a model router agent."""
