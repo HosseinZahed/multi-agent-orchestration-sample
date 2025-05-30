@@ -44,6 +44,7 @@ Replace `01_default_agent.py` with any of the following to try different scenari
 - `06_multi_agent_orchestration_implicit.py` – Implicit multi-agent orchestration 🔄
 - `07_multi_agent_orchestration_explicit.py` – Explicit multi-agent orchestration with function call tracing 🕹️
 - `08_agent_with_rag.py` – Agent with Azure AI Search (RAG) integration 📄
+- `09_model_router.py` – Agent with a Model Router that automatically selects the optimal model for each request.
 
 Open the provided local URL in your browser to chat with your agents!
 
