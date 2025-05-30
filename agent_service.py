@@ -95,7 +95,7 @@ class AgentsService:
         """Create a model router agent."""
         kernel = self.base_kernel.clone()
         kernel.add_service(AzureChatCompletion(
-            deployment_name=model_name,
+            deployment_name="model-router",
             api_version="2024-12-01-preview"))
         agent = ChatCompletionAgent(
             kernel=kernel,

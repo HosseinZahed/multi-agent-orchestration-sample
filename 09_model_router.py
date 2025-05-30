@@ -15,7 +15,6 @@ logger = logging.getLogger(__name__)
 agent_service = AgentsService()
 agent: ChatCompletionAgent = agent_service.create_model_router_agent(
     agent_name="model-router-agent",
-    model_name="model-router",
     instructions="You are a helpful assistant."
 )
 
